@@ -1,6 +1,18 @@
-__pycache__/
-*.pyc
+# Entorno virtual
 .venv/
-.vscode/
+venv/
+
+# Archivos de Python
+__pycache__/
+*.py[cod]
+
+# Cachés y reportes de pruebas
 .pytest_cache/
+.ruff_cache/
 .coverage
+
+# Configuración del editor
+.vscode/
+
+# Variables de entorno
+.env
