@@ -37,3 +37,29 @@ def test_guardar_cliente_con_sus_equipos(db_session):
     assert cliente_db is not None
     assert len(cliente_db.equipos) == 2
     assert cliente_db.equipos[0].cliente.nombre == "Ana Quispe"
+
+def test_eliminar_cliente_elimina_sus_equipos(db_session):
+    # Dado un cliente con un equipo persistido
+    cliente = ClienteModel(nombre="Luis Ramos")
+
+    EquipoModel(
+        descripcion="Lavadora LG",
+        tipo="Lavadora",
+        cliente=cliente
+    )
+
+    db_session.add(cliente)
+    db_session.commit()
+
+    # Cuando se elimina el cliente
+    db_session.delete(cliente)
+    db_session.commit()
+
+    # Entonces sus equipos tambien desaparecen
+    equipo_db = db_session.scalars(
+        select(EquipoModel).where(
+            EquipoModel.descripcion == "Lavadora LG"
+        )
+    ).first()
+
+    assert equipo_db is None
