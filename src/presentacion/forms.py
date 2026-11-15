@@ -353,6 +353,7 @@ class EquipmentForm(ctk.CTkFrame):
     """PBI-02 (CU12/CU20) - Ingreso de equipo con titular siempre visible."""
 
     FAULT_LIMIT = 400
+    SERIAL_LIMIT = 20
 
     def __init__(
         self, master, on_change=None, on_generate=None, on_new_equipment=None,
@@ -581,6 +582,11 @@ class EquipmentForm(ctk.CTkFrame):
         s = self.serial.get().strip().upper()
         if not s:
             self.serial.set_state("neutral")
+        elif len(s) > self.SERIAL_LIMIT:
+            self.serial.set_state(
+                "error",
+                f"✗ Máximo {self.SERIAL_LIMIT} caracteres ({len(s)}/{self.SERIAL_LIMIT})",
+            )
         elif s in NO_SERIAL:
             self.serial.set_state("warn", "⚠ Equipo sin serie: se registra como 'SIN SERIE'")
         else:
@@ -609,6 +615,8 @@ class EquipmentForm(ctk.CTkFrame):
             out.append("Accesorios")
         if self._serial_owner():
             out.append("S/N no duplicado")
+        if len(d["serial"]) > self.SERIAL_LIMIT:
+            out.append(f"S/N máximo {self.SERIAL_LIMIT} caracteres")
         return out
 
     def _update_hint(self, emitted=False):
@@ -766,7 +774,12 @@ class DiagnosticView(ctk.CTkScrollableFrame):
         self.part_combo.grid(row=0, column=0, sticky="ew")
         self.part_combo.bind_change(self._recalc_quote)
 
-        self.labor_field = InputField(quote_panel.body, "Mano de Obra (S/)", "60.00", mono=True)
+        self.labor_field = InputField(
+            quote_panel.body,
+            "Mano de Obra Tarifario Fijo (S/)",
+            values=["60.00", "80.00", "120.00"],
+            mono=True,
+        )
         self.labor_field.set("60.00")
         self.labor_field.grid(row=1, column=0, sticky="ew")
         self.labor_field.bind_change(self._recalc_quote)
@@ -884,7 +897,8 @@ class DiagnosticView(ctk.CTkScrollableFrame):
         self.lbl_reported_fault.configure(text=f"Falla reportada por el cliente: {order.get('fault', 'Sin descripción')}")
         self.diag_notes.set(order.get("diagnosis", ""))
         self.diag_chips.sync(order.get("diagnosis", ""))
-        self.labor_field.set(f"{order.get('labor', 60.0):.2f}")
+        labor_val = f"{order.get('labor', 60.0):.2f}"
+        self.labor_field.set(labor_val if labor_val in ("60.00", "80.00", "120.00") else "60.00")
 
         saved_checks = set(order.get("checks", []))
         for cb, label in zip(self.bench_checks, T.CHECKLIST):
