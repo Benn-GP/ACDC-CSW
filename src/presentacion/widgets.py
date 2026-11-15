@@ -3,7 +3,8 @@ import textwrap
 from datetime import datetime
 
 import customtkinter as ctk
-import theme as T
+
+import src.presentacion.themes as T
 
 
 def _is_ctk(widget):
