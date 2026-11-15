@@ -2,8 +2,9 @@
 import re
 
 import customtkinter as ctk
-import theme as T
-from widgets import (
+
+import src.presentacion.themes as T
+from src.presentacion.widgets import (
     Chip,
     DataRow,
     InputField,
