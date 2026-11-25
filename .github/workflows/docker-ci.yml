@@ -1,0 +1,19 @@
+name: Docker CI
+
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+
+jobs:
+  pruebas-en-docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Construir la imagen
+        run: docker compose --profile pruebas build
+      - name: Ejecutar las pruebas en el contenedor
+        run: docker compose --profile pruebas run --rm pruebas
