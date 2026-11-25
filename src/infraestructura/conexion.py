@@ -1,5 +1,7 @@
 import os
+
 from sqlalchemy import create_engine
+
 from src.infraestructura.modelos import Base
 
 RUTA_DB = os.environ.get("RUTA_DB", "data/taller.db")
