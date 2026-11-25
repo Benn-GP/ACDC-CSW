@@ -1,0 +1,11 @@
+venv/
+.venv/
+__pycache__/
+.pytest_cache/
+.git/
+.github/
+data/
+datos_locales/
+*.db
+*.sqlite3
+*.pyc
