@@ -2,9 +2,8 @@
 import re
 
 import customtkinter as ctk
-
-import src.presentacion.themes as T
-from src.presentacion.widgets import (
+import themes as T
+from widgets import (
     Chip,
     DataRow,
     InputField,
@@ -774,12 +773,7 @@ class DiagnosticView(ctk.CTkScrollableFrame):
         self.part_combo.grid(row=0, column=0, sticky="ew")
         self.part_combo.bind_change(self._recalc_quote)
 
-        self.labor_field = InputField(
-            quote_panel.body,
-            "Mano de Obra Tarifario Fijo (S/)",
-            values=["60.00", "80.00", "120.00"],
-            mono=True,
-        )
+        self.labor_field = InputField(quote_panel.body, "Mano de Obra (S/)", "60.00", mono=True)
         self.labor_field.set("60.00")
         self.labor_field.grid(row=1, column=0, sticky="ew")
         self.labor_field.bind_change(self._recalc_quote)
